@@ -71,3 +71,31 @@ protected void configue(HttpSecurity http) throws Exception {
      .failureHandler(loginFailureHandler())  // 로그인 실패 후 핸들러
 }
 ```
+
+## 05. 인증 API - UsernamePasswordAuthenticationFilter
+### 인증 API - Login Form 인증. 
+![image](https://user-images.githubusercontent.com/40031858/165906048-25aa9951-824c-463a-8fe3-32d47a4af935.png)
+
+### 인증 API - UsernamePasswordAuthenticationFilter
+![image](https://user-images.githubusercontent.com/40031858/165906151-eb4fc3da-039e-4e1b-bdd3-9fb8154af027.png)
+
+## 06. 인증 API - Logout, LogoutFilter
+### 인증 API - Logout
+![image](https://user-images.githubusercontent.com/40031858/165908238-7a1e079d-59f6-42b1-a769-1a99adc3a7e1.png)
+
+```java
+protected void configure(HttpSecurity http) throws Exception{
+  http.logout() // 로그아웃 기능이 작동함
+      .logoutUrl("/logout") //로그아웃 처리 URL
+      .logoutSuccessUrl("/login")
+      .deleteCookies("JSESSIONID", "remember-me") // 로그아웃 후 쿠키삭제
+      .addLogoutHandler(logoutHandler()) //로그아웃 핸들러
+      .lougoutSuccessHandler(logoutSuccessHandler()) //로그아웃 성공 후 핸들러 
+}
+```
+
+### 인증 API - Logout
+![image](https://user-images.githubusercontent.com/40031858/165908574-944c7e77-1687-4b1d-bf82-295e2a9a05f3.png)
+
+### 인증 API - LogoutFilter
+![image](https://user-images.githubusercontent.com/40031858/165908938-c746dc44-d18c-4a20-b635-e73e14950529.png)
