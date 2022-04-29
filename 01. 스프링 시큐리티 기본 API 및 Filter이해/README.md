@@ -34,3 +34,40 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 ```
 
+## 03. 인증 API - HTTP Basic 인증, BasicAuthenticationFilter
+### 인증 API - HTTP Basic 인증
+![image](https://user-images.githubusercontent.com/40031858/165903185-12e6a119-14ff-4ba3-8465-60f87ef04e74.png)
+
+- HTTP는 자체적인 인증 관련 기능을 제공하며 HTTP 표준에 정의된 가장 간단한 인증 기법이다
+- 간단한 설정과 Stateless가 장점 - Session Cookie(JSESSIONID) 사용하지 않음
+- 보호자원 접근시 서버가 클라이언트에게 401 Unauthorized 응답과 함께 WWW-Authenticate header를 기술해서 인증요구를 보냄
+- Client는 ID:Password 값을 Base64로 Encoding한 문자열을 Authorization Header에 추가한 뒤 Server에게 Resource를 요청
+  - Autorization: Basic cmVzdDpyZXN0
+- ID,Password가 Base64로 Encoding되어 있어 ID, Password가 외부에 쉽게 노출되는 구조이기 때문에 SSL이나 TLS는 필수이다
+
+```java
+protected void configure(HttpSecurity http) throws Exception{
+  http.httpBasic();
+}
+```
+### 인증 API - BasicAuthentiacionFilter
+![image](https://user-images.githubusercontent.com/40031858/165903650-6392f156-f9b6-462f-907e-21a2cb92b068.png)
+
+## 04. 인증 API - Form 인증
+### 인증 API - Form 인증
+
+![image](https://user-images.githubusercontent.com/40031858/165903796-21f75fd8-0645-4261-9a36-71dbbd4419df.png)
+
+```java
+protected void configue(HttpSecurity http) throws Exception {
+  http.formLogin() // Form 로그인 인증 기능이 작동
+      .loginPalge("/login.html") // 사용자 정의 로그인 페이지
+      .defaultSuccessUrl("/home") // 로그인 성공 후 이동 페이지
+      .failureUrl("/login.html?error=true") // 로그인 실패 후 이동 페이지
+     .usernameParameter("username") // 아이디 파라미터명 설정
+     .passwordParameter("password") // 패스워드 파라미터명 설정
+     .loginProcessingUrl("/login") // 로그인 Form Action Url 
+     .successHandler(loginSuccessHandler()) // 로그인 성공 후 핸들러
+     .failureHandler(loginFailureHandler())  // 로그인 실패 후 핸들러
+}
+```

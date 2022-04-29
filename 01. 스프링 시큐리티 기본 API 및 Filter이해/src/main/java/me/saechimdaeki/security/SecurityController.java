@@ -10,4 +10,11 @@ public class SecurityController {
     public String home(){
         return "home";
     }
+
+    @GetMapping("/loginPage")
+    public String loginPage(){
+        return "loginPage";
+    }
+
+
 }
