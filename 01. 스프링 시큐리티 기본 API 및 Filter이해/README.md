@@ -170,3 +170,69 @@ protected void configure(HttpSecurity http) throws Exception{
 - `SessionCreationPolicy.Never` : 스프링 시큐리티가 생성하지 않지만 이미 존재하면 사용
 - `SessionCreationPolicy.Stateless` : 스프링 시큐리티가 생성하지 않고 존재해도 사용하지 않음
 
+## 11. 인증 API - SessionManagementFilter ConcurrentSessionFilter
+### 인증 API - SessionManagementFilter
+1. 세션 관리
+- 인증 시 사용자의 세션 정보를 등록, 조회, 삭제 등의 세션 이력을 관리  
+2. 동시적 세션 제어
+- 동일 계정으로 접속이 허용되는 최대 세션수를 제한
+3. 세션 고정 보호
+- 인증 할 때마다 세션쿠키를 새로 발급하여 공격자의 쿠키 조작을 방지
+4. 세션 생성 정책
+- Always, If_Required, Never , Stateless
+
+### 인증 API - ConcurrentSessionFilter
+- 매 요청 마다 현재 사용자의 세션 만료 여부 체크
+- 세션이 만료로 설정되었을 경우 즉시 만료 처리
+- Session.isExpired() == true
+  - 로그 아웃 처리
+  - 즉시 오류 페이지 응답
+    - `"This Session has been expired"`
+
+![image](https://user-images.githubusercontent.com/40031858/166092580-b2a3e18b-be6d-4486-ba86-7e2a03b5c932.png)
+
+![image](https://user-images.githubusercontent.com/40031858/166092606-4876acee-0fef-41d1-a5ec-32f7693ed12c.png)
+
+## 12. 인가 API - 권한 설정 및 표현식
+### 인가 API - 권한 설정
+- 선언적 방식
+  - URL
+    - http.antMatchers("/users/**").hasRole("USER")
+  - Method
+    - @PreAuthorize("hasRole('USER')")
+      public void user(){//}
+- 동적 방식 - DB 연동 프로그래밍
+  - URL
+  - Method
+
+```java
+@Override
+protected void configure(HttpSecurity http) throws Exception{
+  http
+    .natMatcher("/shop/**")
+    .authroizeRequests()
+      .antMatchers("/shop/login", "/shop/users/**").permitAll()
+      .antMatchers("/shop/mtpage").hasRole("USER")
+      .antMatchers("/shop/admin/pay").access("harRole('ADMIN')")
+      .antMatchers("/shop/admin/**").access("hasRole('ADMIN') or hasRole('SYS')")
+      .anyRequest().authenticated()
+}
+// 주의 사항 - 설정 시 구체적인 경로가 먼저오고 그것보다 큰 범위의 경로가 뒤에 오도록 해야한다.
+```
+
+### 인가 API - 표현식
+|||
+|:--:|:--:|
+|`메소드`|`동작`|
+|`authenticated()`|인증된 사용자의 접근을 허용|
+|`fullyAuthenticated()`|인증된 사용자의 접근을 허용, rememberMe 인증 제외|
+|`permitAll()`|무조건 접근을 허용|
+|`denyAll()`|무조건 접근을 허용하지 않음|
+|`anonymous()`|익명사용자의 접근을 허용|
+|`rememberMe()`|기억하기를 통해 인증된 사용자의 접근을 허용|
+|`access(String)`|주어진 SpEL 표현식의 평가 결과가 true이면 접근을 허용|
+|`hasRole(String)`|사용자가 주어진 역할이 있다면 접근을 허용|
+|`hasAuthority(String)`|사용자가 주어진 권한이 있다면 접근을 허용|
+|`hasAnyRole(String...)`|사용자가 주어진 권한이 있다면 접근을 허용|
+|`hasAnyAuthority(String...)`|사용자가 주어진 권한 중 어떤 것이라도 있다면 접근을 허용|
+|`hasIpAddress(String)`|주어진 IP로부터 요청이 왔다면 접근을 허용|
