@@ -236,3 +236,43 @@ protected void configure(HttpSecurity http) throws Exception{
 |`hasAnyRole(String...)`|사용자가 주어진 권한이 있다면 접근을 허용|
 |`hasAnyAuthority(String...)`|사용자가 주어진 권한 중 어떤 것이라도 있다면 접근을 허용|
 |`hasIpAddress(String)`|주어진 IP로부터 요청이 왔다면 접근을 허용|
+
+## 13. 인증/ 인가 API - ExceptionTranslationFilter, RequestCacheAwareFilter
+### 인증/인가 API - ExceptionTranslationFilter
+- `AuthenticationException`
+  - 인증 예외 처리
+    1. AuthenticationEntryPoint 호출
+       - 로그인 페이지 이동, 401 오류 코드 전달 등
+    2. 인증 예외가 발생하기 전의 요청 정보를 저장
+       - RequestCache - 사용자의 이전 요청 정보를 세션에 저장하고 이를 꺼내 오는 캐시 메커니즘
+         - SavedRequest - 사용자가 요청했던 request 파라미터 값들, 그 당시의 헤더값들 등이 저장
+- `AccessDeniedException`
+  - 인가 예외 처리
+    - AccessDeniedHandler 에서 예외 처리하도록 제공
+
+![image](https://user-images.githubusercontent.com/40031858/166099607-19d40555-c37a-4319-8319-55d0f848bc4f.png)
+
+```java
+protected void configure(HttpSecurity http) throws Exception{
+  http.excptionHandling()
+      .authenticationEntryPoint(authenticationEntryPoint()) // 인증실패 시 처리
+      .accessDeniedHandler(accessDeniedHandler()) // 인증실패 시 처리
+}
+```
+### 인증/인가 API - ExceptionTranslationFilter
+![image](https://user-images.githubusercontent.com/40031858/166099679-a40375b0-e1ec-45c4-b913-afd335e61468.png)
+
+## 14. Form 인증 - CSRF, CsrfFilter
+### Form 인증 - CSRF (사이트 간 요청 위죠)
+![image](https://user-images.githubusercontent.com/40031858/166100400-c038d73f-0521-4aa1-aa66-7652ea9aae0c.png)
+
+### Form 인증 - CsrfFilter
+- 모든 요청에 랜덤하게 생성된 토큰을 HTTP 파라미터로 요구
+- 요청 시 전달되는 토큰 값과 서버에 저장된 실제 값과 비교한 후 만약 일치하지 않으면 요청은 실패한다
+
+- `Client`
+  - < input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+  - HTTP 메소드 : PATCH , POST , PUT, DELETE
+- `Spring Security`
+  - http.csrf() : 기본 활성화되어 있음
+  - http.csrf().disabled() : 비활성화
