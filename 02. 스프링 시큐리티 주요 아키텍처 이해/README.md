@@ -21,3 +21,18 @@
 
 ### DelegatingFilterProxy , FilterChainProxy
 ![image](https://user-images.githubusercontent.com/40031858/166101680-f3903f13-d4ef-4e76-9c35-f495c14a2238.png)
+
+## 02. 필터 초기화와 다중 보안 설정
+![image](https://user-images.githubusercontent.com/40031858/166125599-2f66d229-b0c8-44aa-a171-c28ff8cbc980.png)
+
+- 설정클래스 별로 보안 기능이 각각 작동
+- 설정클래스 별로 RequestMatcher설정
+  - http.antMatcher("/admin/**")
+- 설정클래스 별로 필터가 생성
+- FilterChainProxy가 각 필터들 가지고 있음
+- 요청에 따라 RequestMatcher와 매칭되는 필터가 작동하도록 함
+
+![image](https://user-images.githubusercontent.com/40031858/166125624-af3d6615-683d-4fb7-b2f1-d6bb52c299e4.png)
+
+### WebSecurity, HttpSecurity, WebSecurityConfigurerAdapter
+![image](https://user-images.githubusercontent.com/40031858/166125643-abe5f472-b68d-45f0-a3af-8c31d606608e.png)
