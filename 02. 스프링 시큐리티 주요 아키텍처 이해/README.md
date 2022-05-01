@@ -68,3 +68,28 @@
 - `Authentication authentication = SecurityContextHolder.getContext().getAuthentication()`
 
 ![image](https://user-images.githubusercontent.com/40031858/166129617-257a526a-3c44-4746-8437-a7778b563e56.png)
+
+## 05. SecurityContextPersistenceFilter
+- `SecurityContext객체의 생성, 저장 , 조회`
+  - 익명 사용자
+    - 새로운 SecurityContext 객체를 생성하여 SecurityContextHolder에 저장
+    - AnonymousAuthenticationFilter에서 AnonymousAuthenticationToken 객체를 SecurityContext에 저장
+  - 인증 시 
+    - 새로운 SecurityContext 객체를 생성하여 SecurityContextHolder에 저장
+    - UsernamePasswordAuthenticationFilter에서 인증 성공 후 SecurityContext에 UsernamePasswordAuthentication 객체를 SecurityContext에 저장
+    - 인증이 최종 완료되면 Session에 SecurityContext를 저장
+  - 인증 후
+    - Session에서 SecurityContext 꺼내어 SecurityContextHolder에서 저장
+    - SecurityContext안에 Authentication 객체가 존재하면 계속 인증을 유지한다
+  - 최종 응답 시 공통
+    - SecurityContextHolder.clearContext()
+
+![image](https://user-images.githubusercontent.com/40031858/166131304-9b833da4-be31-441f-861e-0e178fa76194.png)
+
+![image](https://user-images.githubusercontent.com/40031858/166131308-1adbd9dc-76d1-4731-9c7b-a3e4379affde.png)
+
+![image](https://user-images.githubusercontent.com/40031858/166131317-884f30fe-45ae-4702-b5ac-8e70c1eeccc0.png)
+
+### Authentication Flow
+![image](https://user-images.githubusercontent.com/40031858/166131701-3425c525-9b77-4d4e-a613-d02fecce66fa.png)
+
