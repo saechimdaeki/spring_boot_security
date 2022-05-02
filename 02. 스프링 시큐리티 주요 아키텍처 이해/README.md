@@ -161,3 +161,5 @@
     - Voter가 해당 타입의 요청에 대해 결정을 내릴 수 없는 경우
 
 ![image](https://user-images.githubusercontent.com/40031858/166149751-715358b9-7f16-4684-b5fc-e80da98e123c.png)
+
+![image](https://user-images.githubusercontent.com/40031858/166220385-98e70726-b634-4b1b-aac0-1a5d41a99439.png)
